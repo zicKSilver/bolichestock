@@ -1,0 +1,69 @@
+## .NET
+bin/
+obj/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+*.userprefs
+.vs/
+*.db
+*.db-shm
+*.db-wal
+
+## Node
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+## Build results
+[Dd]ebug/
+[Rr]elease/
+x64/
+x86/
+build/
+bld/
+[Bb]in/
+[Oo]bj/
+[Ll]og/
+[Ll]ogs/
+
+## Visual Studio
+.vs/
+*.sln.ide/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+## JetBrains Rider
+.idea/
+*.sln.iml
+
+## macOS
+.DS_Store
+
+## Frontend (Vite)
+dist/
+dist-ssr/
+*.local
+*.ntvs*
+*.njsproj
+*.sw?
+
+## Environment
+.env
+.env.local
+.env.*.local
+
+## IDE
+.vscode/
+
+## HTTP scratch files
+*.http
+
+## Backend env-specific config
+appsettings.Development.json
+appsettings.Production.json
+appsettings.Test.json

@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: bolichestock-api
+    env: docker
+    dockerfilePath: Dockerfile
+    plan: free
+    envVars:
+      - key: ASPNETCORE_ENVIRONMENT
+        value: Production
+      - key: ASPNETCORE_URLS
+        value: http://0.0.0.0:${PORT}
+      - key: ConnectionStrings__DefaultConnection
+        sync: false
+      - key: Jwt__Key
+        generateValue: true
+      - key: Cors__FrontendUrl
+        value: https://tu-app.vercel.app
+      - key: Seed__Password
+        sync: false

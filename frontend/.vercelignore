@@ -1,0 +1,6 @@
+src/test
+src/**/__tests__
+*.test.ts
+*.test.tsx
+.eslint*
+tsconfig*.json

@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-fondo: #1F1F1F;
+  --color-tarjeta: #262626;
+  --color-borde: #c4b5fd;
+  --color-primary: #e879f9;
+  --color-secondary: #c084fc;
+  --color-primary-glow: 0 0 16px rgba(232, 121, 249, 0.25);
+  --color-secondary-glow: 0 0 16px rgba(192, 132, 252, 0.25);
+}
+
+body {
+  margin: 0;
+  background: #1F1F1F;
+  color: #e5e5e5;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  scrollbar-width: thin;
+  scrollbar-color: #c4b5fd40 #1F1F1F;
+}
+
+#root {
+  min-height: 100svh;
+}
+
+::selection {
+  background: rgba(232, 121, 249, 0.3);
+  color: #fff;
+}
+
+*:focus-visible {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(232, 121, 249, 0.4);
+  border-radius: 8px;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+  100% { transform: translateX(100%); }
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator {
+  filter: invert(1);
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1F1F1F;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c4b5fd40;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c4b5fd80;
+}
