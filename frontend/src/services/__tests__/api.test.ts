@@ -22,7 +22,7 @@ function mockResponse(data: unknown, status = 200) {
 
 describe('api.login', () => {
   it('calls POST /api/auth/login with credentials', async () => {
-    const response = { token: 'abc', nombreUsuario: 'admin' }
+    const response = { token: 'abc', nombreUsuario: 'admin', isAdmin: true }
     mockFetch.mockResolvedValue(mockResponse(response))
 
     const result = await api.login('admin', 'pass123')
@@ -51,7 +51,7 @@ describe('api.getProductos', () => {
 
 describe('api.abrirEvento', () => {
   it('calls POST /api/eventos with fecha', async () => {
-    const evento = { id: 1, fecha: '2026-06-22', estado: 'Abierto' }
+    const evento = { id: 1, fecha: '2026-06-22', estado: 'Abierto', totalTickets: 0, totalVendido: 0 }
     mockFetch.mockResolvedValue(mockResponse(evento))
 
     const result = await api.abrirEvento('2026-06-22')
@@ -69,7 +69,7 @@ describe('api.abrirEvento', () => {
 
 describe('api.getCierresPaged', () => {
   it('returns paged cierres', async () => {
-    const paged = { items: [], totalCount: 0, page: 1, pageSize: 20 }
+    const paged = { items: [], totalCount: 0, page: 1, pageSize: 20, totalPages: 0 }
     mockFetch.mockResolvedValue(mockResponse(paged))
 
     const result = await api.getCierresPaged(1)

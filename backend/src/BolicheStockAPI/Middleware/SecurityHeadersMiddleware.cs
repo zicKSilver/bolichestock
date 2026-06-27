@@ -16,6 +16,8 @@ public class SecurityHeadersMiddleware
         context.Response.Headers.Append("Referrer-Policy", "strict-origin-when-cross-origin");
         context.Response.Headers.Append("Permissions-Policy", "geolocation=(), microphone=(), camera=()");
         context.Response.Headers.Append("X-XSS-Protection", "0");
+        context.Response.Headers.Append("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+        context.Response.Headers.Append("Content-Security-Policy", "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self'");
 
         await _next(context);
     }

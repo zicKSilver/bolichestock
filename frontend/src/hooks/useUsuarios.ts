@@ -21,3 +21,20 @@ export function useSetAdmin() {
     onSuccess: () => qc.invalidateQueries({ queryKey: ['usuarios'] }),
   })
 }
+
+export function useCrearUsuario() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: ({ nombreUsuario, password }: { nombreUsuario: string; password: string }) =>
+      api.createUsuario(nombreUsuario, password),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['usuarios'] }),
+  })
+}
+
+export function useEliminarUsuario() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (id: number) => api.deleteUsuario(id),
+    onSuccess: () => qc.invalidateQueries({ queryKey: ['usuarios'] }),
+  })
+}

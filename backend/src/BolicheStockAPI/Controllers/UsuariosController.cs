@@ -35,6 +35,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpPost]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult> Create(CrearUsuarioRequestDto dto)
     {
         var created = await _usuarioService.CreateAsync(dto);
@@ -45,6 +46,7 @@ public class UsuariosController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [Authorize(Roles = "admin")]
     public async Task<ActionResult> Delete(int id)
     {
         var deleted = await _usuarioService.DeleteAsync(id);

@@ -1,5 +1,6 @@
 namespace BolicheStock.Tests.Integration;
 
+[Collection("IntegrationTests")]
 public class StockUpsertTests : IntegrationTestBase
 {
     public StockUpsertTests(IntegrationTestFactory factory) : base(factory) { }

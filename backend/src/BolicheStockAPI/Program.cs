@@ -123,10 +123,13 @@ using (var scope = app.Services.CreateScope())
 
     if (!context.Usuarios.Any(u => u.NombreUsuario == "admin"))
     {
+        var seedPassword = builder.Configuration["Seed:Password"]
+            ?? throw new InvalidOperationException("Seed:Password es requerida. Configurala via env var o appsettings.");
+
         context.Usuarios.Add(new BolicheStockAPI.Models.Usuario
         {
             NombreUsuario = "admin",
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(builder.Configuration["Seed:Password"] ?? "admin123"),
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(seedPassword),
             IsAdmin = true
         });
         context.SaveChanges();

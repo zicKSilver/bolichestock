@@ -1,5 +1,6 @@
 namespace BolicheStock.Tests.Integration;
 
+[Collection("IntegrationTests")]
 public class EventoFlujoCompletoTests : IntegrationTestBase
 {
     public EventoFlujoCompletoTests(IntegrationTestFactory factory) : base(factory) { }

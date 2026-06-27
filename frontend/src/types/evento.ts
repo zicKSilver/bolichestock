@@ -46,6 +46,7 @@ export const CierreListadoSchema = z.object({
   fechaEvento: z.string(),
   totalVendido: z.number(),
   efectivoEnCaja: z.number(),
+  descuentoManual: z.number(),
   diferencia: z.number(),
   fechaHoraCierre: z.string(),
 })

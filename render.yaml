@@ -12,7 +12,7 @@ services:
       - key: ConnectionStrings__DefaultConnection
         sync: false
       - key: Jwt__Key
-        generateValue: true
+        value: "BolicheAPI_SuperSecretKey_2026_MinLength32Chars!"
       - key: Cors__FrontendUrl
         value: https://tu-app.vercel.app
       - key: Seed__Password

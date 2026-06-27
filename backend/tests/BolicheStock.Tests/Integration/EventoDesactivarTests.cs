@@ -1,5 +1,6 @@
 namespace BolicheStock.Tests.Integration;
 
+[Collection("IntegrationTests")]
 public class EventoDesactivarTests : IntegrationTestBase
 {
     public EventoDesactivarTests(IntegrationTestFactory factory) : base(factory) { }

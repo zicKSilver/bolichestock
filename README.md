@@ -21,7 +21,13 @@ Full-stack stock management system for events.
 ### Database
 
 ```bash
-docker run --name boliche-pg -e POSTGRES_DB=bolichestock -e POSTGRES_PASSWORD=devpass -p 5432:5432 -d postgres:16
+docker run --name pg-boliche -e POSTGRES_USER=boliche -e POSTGRES_PASSWORD=boliche123 -e POSTGRES_DB=bolichestock -p 5432:5432 -d postgres:16
+```
+
+O usando docker-compose (recomendado):
+
+```bash
+docker compose up -d
 ```
 
 ### Backend
@@ -32,22 +38,30 @@ dotnet restore
 dotnet run
 ```
 
+> **Nota:** En desarrollo necesitás un `appsettings.Development.json` (gitignored) con `Jwt:Key` y `Seed:Password`.
+> Usá el `render.yaml` como referencia para los valores de producción.
+
 ### Frontend
 
 ```bash
 cd frontend
 npm install
+cp .env.example .env
 npm run dev
 ```
 
 ### Tests
 
 ```bash
+# Backend
 dotnet test backend/BolicheAPI.slnx
+
+# Frontend
+cd frontend && npm test
 ```
 
 ## Deploy
 
-- **Backend**: Render (Docker)
-- **Frontend**: Vercel
-- **Database**: Neon
+- **Backend**: Render (Docker) — setear env vars: `ConnectionStrings__DefaultConnection`, `Seed__Password`, `Cors__FrontendUrl`, `Jwt__Key`
+- **Frontend**: Vercel — setear `VITE_API_URL` apuntando al backend
+- **Database**: Neon (PostgreSQL serverless)

@@ -6,7 +6,7 @@ using BolicheStockAPI.DTOs;
 
 namespace BolicheStock.Tests.Integration;
 
-public abstract class IntegrationTestBase : IClassFixture<IntegrationTestFactory>
+public abstract class IntegrationTestBase
 {
     protected readonly HttpClient Client;
     protected readonly IntegrationTestFactory Factory;

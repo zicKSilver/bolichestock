@@ -1,0 +1,36 @@
+services:
+  db:
+    image: postgres:16
+    container_name: pg-boliche
+    environment:
+      POSTGRES_USER: boliche
+      POSTGRES_PASSWORD: boliche123
+      POSTGRES_DB: bolichestock
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U boliche -d bolichestock"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "10000:10000"
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
+      ASPNETCORE_URLS: http://0.0.0.0:10000
+      ConnectionStrings__DefaultConnection: Host=db;Port=5432;Database=bolichestock;Username=boliche;Password=boliche123
+      Jwt__Key: BolicheAPI_SuperSecretKey_2026_MinLength32Chars!
+      Seed__Password: Cachengueproject1
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  pgdata:

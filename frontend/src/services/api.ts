@@ -1,13 +1,13 @@
 import { z } from 'zod'
 import { LoginResponseSchema, type LoginResponse } from '../types/auth'
-import { ProductoSchema, ProductoRequestSchema, type Producto, type ProductoRequest } from '../types/producto'
+import { ProductoSchema, type Producto, type ProductoRequest } from '../types/producto'
 import { EventoSchema, CierreCajaSchema, ProductoEventoTicketSchema, StockItemSchema, CierreListadoSchema, type Evento, type CierreCaja, type ProductoEventoTicket, type StockItem, type CierreListado } from '../types/evento'
 import { ReporteGeneralSchema, type ReporteGeneral } from '../types/reporte'
 import { PagedResultSchema } from '../types/common'
 import type { PagedResult } from '../types/common'
 import { safeGet, safeRemove } from '../utils/storage'
 
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5075'
+const API_URL = import.meta.env.VITE_API_URL
 
 async function request<T>(endpoint: string, schema: z.ZodType<T>, options?: RequestInit): Promise<T> {
   const token = safeGet('token')
@@ -134,5 +134,18 @@ export const api = {
     request<void>(`/api/usuarios/${id}/admin`, z.void(), {
       method: 'PUT',
       body: JSON.stringify({ isAdmin }),
+    }),
+  createUsuario: (nombreUsuario: string, password: string) =>
+    request<{ id: number; nombreUsuario: string; isAdmin: boolean }>('/api/usuarios', z.object({
+      id: z.number(),
+      nombreUsuario: z.string(),
+      isAdmin: z.boolean(),
+    }), {
+      method: 'POST',
+      body: JSON.stringify({ nombreUsuario, password }),
+    }),
+  deleteUsuario: (id: number) =>
+    request<void>(`/api/usuarios/${id}`, z.void(), {
+      method: 'DELETE',
     }),
 }

@@ -14,10 +14,11 @@ public class IntegrationTestFactory : WebApplicationFactory<Program>, IAsyncLife
         builder.UseEnvironment("Test");
 
         builder.UseSetting("ConnectionStrings:DefaultConnection",
-            "Host=localhost;Port=5432;Database=bolichestock_test;Username=postgres;Password=devpass");
+            "Host=localhost;Port=5432;Database=bolichestock_test;Username=boliche;Password=boliche123");
         builder.UseSetting("Jwt:Key", TestAuthHelper.JwtKey);
         builder.UseSetting("Jwt:Issuer", TestAuthHelper.Issuer);
         builder.UseSetting("Jwt:Audience", TestAuthHelper.Audience);
+        builder.UseSetting("Seed:Password", "testpassword");
 
         builder.ConfigureTestServices(services =>
         {
@@ -27,7 +28,7 @@ public class IntegrationTestFactory : WebApplicationFactory<Program>, IAsyncLife
                 services.Remove(descriptor);
 
             services.AddDbContext<AppDbContext>(options =>
-                options.UseNpgsql("Host=localhost;Port=5432;Database=bolichestock_test;Username=postgres;Password=devpass"));
+                options.UseNpgsql("Host=localhost;Port=5432;Database=bolichestock_test;Username=boliche;Password=boliche123"));
         });
     }
 
