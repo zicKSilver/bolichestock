@@ -36,7 +36,17 @@ BolicheStockAPI/
 │       ├── Validators/      # FluentValidation
 │       ├── Middleware/      # Error handling, seguridad
 │       └── Data/            # DbContext + Migrations
-├── frontend/                # React 19 + Vite 8 + Tailwind
+├── frontend/
+│   └── src/
+│       ├── components/      # Componentes reutilizables (UI, layout, forms)
+│       ├── pages/           # Páginas de la app (Dashboard, Productos, etc.)
+│       ├── hooks/           # Custom hooks + React Query mutations
+│       ├── services/        # Llamadas a la API con validación Zod
+│       ├── context/         # AuthContext (login, token, roles)
+│       ├── types/           # Schemas Zod (validación frontend)
+│       ├── utils/           # Utilidades (fechas, PDF, etc.)
+│       ├── config/          # Configuración (ej: queryKeys)
+│       └── test/            # Setup de tests (vitest + jsdom)
 ├── docker-compose.yml       # PostgreSQL + API
 └── Dockerfile               # Build multi-etapa
 ```
