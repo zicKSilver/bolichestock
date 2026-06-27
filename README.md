@@ -78,7 +78,7 @@ Habría que agregar una columna `UsuarioId` a las entidades (Productos, Eventos,
 docker compose up -d
 
 # O manualmente:
-docker run --name pg-boliche -e POSTGRES_USER=boliche -e POSTGRES_PASSWORD=boliche123 -e POSTGRES_DB=bolichestock -p 5432:5432 -d postgres:16
+docker run --name pg-boliche -e POSTGRES_USER=boliche -e POSTGRES_PASSWORD=boliche123 -e POSTGRES_DB=bolichestock -p 5432:5432 -d postgres:18
 ```
 
 ### Backend
