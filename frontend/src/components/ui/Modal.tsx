@@ -14,7 +14,7 @@ export default function Modal({ open, onOpenChange, title, children, maxWidth = 
     <Dialog.Root open={open} onOpenChange={onOpenChange}>
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-40 bg-black/70 backdrop-blur-sm data-[state=open]:animate-in data-[state=closed]:animate-out" />
-        <Dialog.Content className={`fixed left-1/2 top-1/2 z-50 w-full -translate-x-1/2 -translate-y-1/2 rounded-xl border border-borde bg-tarjeta p-6 shadow-2xl shadow-black/50 ${maxWidth}`}>
+        <Dialog.Content className={`fixed left-1/2 top-1/2 z-50 w-[calc(100%-2rem)] -translate-x-1/2 -translate-y-1/2 rounded-xl border border-borde bg-tarjeta p-6 shadow-2xl shadow-black/50 sm:w-full ${maxWidth}`}>
           <div className="mb-4 flex items-center justify-between">
             <Dialog.Title className="text-lg font-bold text-white">
               {title}

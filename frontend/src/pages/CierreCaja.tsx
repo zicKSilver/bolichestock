@@ -227,8 +227,8 @@ export default function CierreCaja() {
   const isCerrado = cierre !== null
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4 px-4 py-6">
-      <div className="flex items-center justify-between">
+      <div className="mx-auto max-w-2xl space-y-4 px-4 py-6 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white drop-shadow-[0_0_6px_rgba(232,121,249,0.15)]">
           Cierre de caja
         </h1>
@@ -355,9 +355,9 @@ export default function CierreCaja() {
                   <thead>
                     <tr className="border-b border-borde/30 text-gray-300">
                       <th className="pb-2 pr-2">Producto</th>
-                      <th className="pb-2 pr-2 text-right">Stock Recibido</th>
+                      <th className="hidden pb-2 pr-2 text-right lg:table-cell">Stock Recibido</th>
                       <th className="pb-2 pr-2 text-right">Vendidos</th>
-                      <th className="pb-2 pr-2 text-right">Consumo</th>
+                      <th className="hidden pb-2 pr-2 text-right md:table-cell">Consumo</th>
                       <th className="pb-2 text-right">Devolver</th>
                     </tr>
                   </thead>
@@ -371,11 +371,11 @@ export default function CierreCaja() {
                       return (
                         <tr key={s.productoId} className="border-b border-borde/20 transition-all duration-200 hover:bg-white/2">
                           <td className="py-2 pr-2 text-white">{s.productoNombre}</td>
-                          <td className="py-2 pr-2 text-right text-gray-300">{s.stock}</td>
+                          <td className="hidden py-2 pr-2 text-right text-gray-300 lg:table-cell">{s.stock}</td>
                           <td className="py-2 pr-2 text-right text-gray-300">
                             {productoIdsConTicketera?.has(s.productoId) ? vendidos : '—'}
                           </td>
-                          <td className="py-2 pr-2 text-right">
+                          <td className="hidden py-2 pr-2 text-right md:table-cell">
                             <input
                               type="number"
                               min={0}

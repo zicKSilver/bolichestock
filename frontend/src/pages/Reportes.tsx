@@ -85,7 +85,7 @@ export default function Reportes() {
     : `Ventas del ${formatDateLocal(desde)} al ${formatDateLocal(hasta)}`
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4 px-4 py-6">
+    <div className="mx-auto max-w-2xl space-y-4 px-4 py-6 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white drop-shadow-[0_0_6px_rgba(232,121,249,0.15)]">
           Reportes
@@ -155,7 +155,7 @@ export default function Reportes() {
                   <tr className="border-b border-borde/30 text-gray-300">
                     <th className="pb-2 pr-2">Producto</th>
                     <th className="pb-2 pr-2 text-right">Cant.</th>
-                    <th className="pb-2 pr-2 text-right">Prom.</th>
+                    <th className="hidden pb-2 pr-2 text-right md:table-cell">Prom.</th>
                     <th className="pb-2 pr-2 text-right">Bruto</th>
                   </tr>
                 </thead>
@@ -164,7 +164,7 @@ export default function Reportes() {
                     <tr key={r.producto} className={`border-b border-borde/20 transition-all duration-200 hover:bg-white/2 ${i % 2 === 1 ? 'bg-white/1.5' : ''}`}>
                       <td className="py-2 pr-2 text-white">{r.producto}</td>
                       <td className="py-2 pr-2 text-right text-gray-300">{r.cantidadTotal}</td>
-                      <td className="py-2 pr-2 text-right text-gray-300">${r.precioPromedioPonderado.toFixed(2)}</td>
+                      <td className="hidden py-2 pr-2 text-right text-gray-300 md:table-cell">${r.precioPromedioPonderado.toFixed(2)}</td>
                       <td className="py-2 pr-2 text-right text-gray-300">${r.totalVendido.toFixed(2)}</td>
                     </tr>
                   ))}

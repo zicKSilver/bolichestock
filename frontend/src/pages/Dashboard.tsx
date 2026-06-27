@@ -97,7 +97,7 @@ export default function Dashboard() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-6 px-4 py-6">
+    <div className="mx-auto max-w-2xl space-y-6 px-4 py-6 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold text-white drop-shadow-[0_0_6px_rgba(232,121,249,0.15)]">
         Dashboard
       </h1>
@@ -184,7 +184,7 @@ export default function Dashboard() {
                 {productosSinTicketera.map((p) => {
                   const desactivado = getSinStockNecesario(p.id)
                   return (
-                    <div key={p.id} className={`flex items-center gap-2 rounded-lg border px-3 py-2 transition-all duration-200 ${desactivado ? 'border-gray-700/50 bg-gray-800/20 opacity-50' : 'border-borde/50 hover:border-primary/30'}`}>
+                    <div key={p.id} className={`flex flex-wrap items-center gap-2 rounded-lg border px-3 py-2 transition-all duration-200 ${desactivado ? 'border-gray-700/50 bg-gray-800/20 opacity-50' : 'border-borde/50 hover:border-primary/30'}`}>
                       <label className="flex cursor-pointer items-center gap-1 text-xs text-gray-300">
                         <input
                           type="checkbox"

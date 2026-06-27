@@ -67,7 +67,7 @@ export default function Productos() {
   const productoEditando = editando ? productos.find((p) => p.id === editando) : null
 
   return (
-    <div className="mx-auto max-w-4xl space-y-4 px-4 py-6">
+    <div className="mx-auto max-w-4xl space-y-4 px-4 py-6 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white drop-shadow-[0_0_6px_rgba(232,121,249,0.15)]">
           Productos
@@ -103,7 +103,7 @@ export default function Productos() {
               <table className="w-full text-left text-sm">
                 <thead>
                   <tr className="border-b border-borde/30 text-gray-300">
-                    <th className="pb-2 pr-2">ID</th>
+                    <th className="hidden pb-2 pr-2 md:table-cell">ID</th>
                     <th className="pb-2 pr-2">Nombre</th>
                     <th className="pb-2 pr-2 text-right">Precio</th>
                     <th className="pb-2 text-right">Acciones</th>
@@ -112,7 +112,7 @@ export default function Productos() {
                 <tbody>
                   {productosPagina.map((p, i) => (
                     <tr key={p.id} className={`border-b border-borde/20 transition-all duration-200 hover:bg-white/2 ${i % 2 === 1 ? 'bg-white/1.5' : ''}`}>
-                      <td className="py-2 pr-2 text-gray-200">{p.id}</td>
+                      <td className="hidden py-2 pr-2 text-gray-200 md:table-cell">{p.id}</td>
                       <td className="py-2 pr-2 text-white">{p.nombre}</td>
                       <td className="py-2 pr-2 text-right text-gray-200">${p.precio.toFixed(2)}</td>
                       <td className="py-2 text-right">

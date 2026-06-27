@@ -20,7 +20,7 @@ public class ReporteRepository : IReporteRepository
             .Include(pet => pet.Evento)
                 .ThenInclude(e => e.CierreCaja)
             .Where(pet => pet.NumeroFinal.HasValue)
-            .Where(pet => pet.Evento.Fecha >= desde.Date && pet.Evento.Fecha < (hasta.Date == DateTime.MaxValue.Date ? DateTime.MaxValue : hasta.Date.AddDays(1)));
+            .Where(pet => pet.Evento.Fecha >= DateTime.SpecifyKind(desde.Date, DateTimeKind.Utc) && pet.Evento.Fecha < (hasta.Date == DateTime.MaxValue.Date ? DateTime.MaxValue : DateTime.SpecifyKind(hasta.Date.AddDays(1), DateTimeKind.Utc)));
 
         if (productoId.HasValue)
             query = query.Where(pet => pet.ProductoId == productoId.Value);

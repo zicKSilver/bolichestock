@@ -65,7 +65,7 @@ export default function Cierres() {
   const hasMore = page < totalPages
 
   return (
-    <div className="mx-auto max-w-3xl space-y-4 px-4 py-6">
+    <div className="mx-auto max-w-3xl space-y-4 px-4 py-6 sm:px-6 lg:px-8">
       <h1 className="text-2xl font-bold text-white drop-shadow-[0_0_6px_rgba(232,121,249,0.15)]">
         Cierres de caja
       </h1>

@@ -59,7 +59,7 @@ export default function Usuarios() {
   }
 
   return (
-    <div className="mx-auto max-w-2xl space-y-4 px-4 py-6">
+    <div className="mx-auto max-w-2xl space-y-4 px-4 py-6 sm:px-6 lg:px-8">
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-white drop-shadow-[0_0_6px_rgba(232,121,249,0.15)]">
           Usuarios
@@ -81,7 +81,7 @@ export default function Usuarios() {
             {usuarios.map((u) => (
               <div
                 key={u.id}
-                className="flex items-center justify-between rounded-lg border border-borde/50 p-3 transition-all duration-200 hover:border-primary/30 hover:bg-white/2"
+                className="flex flex-wrap items-center justify-between gap-2 rounded-lg border border-borde/50 p-3 transition-all duration-200 hover:border-primary/30 hover:bg-white/2"
               >
                 <div className="flex items-center gap-3">
                   <span className="text-sm font-medium text-white">{u.nombreUsuario}</span>
@@ -94,7 +94,7 @@ export default function Usuarios() {
                     <span className="text-xs text-gray-500">(vos)</span>
                   )}
                 </div>
-                <div className="flex items-center gap-2">
+                <div className="flex flex-wrap items-center gap-2">
                   {u.nombreUsuario !== user && (
                     <>
                       <button
