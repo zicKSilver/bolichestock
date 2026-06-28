@@ -263,7 +263,7 @@ export default function Dashboard() {
             if (val < 1) { toast.error('El número debe ser mayor o igual a 1'); return }
             await createTicketRollo.mutateAsync({
               eventoId: eventoActivo!.id,
-              data: { productoId: crearTicketera.productoId, numeroInicial: val },
+              data: { productoId: crearTicketera.productoId, numeroInicial: val, totalTicketera: val },
             })
             setCrearTicketera(null)
             setNumeroInicialCrear('')

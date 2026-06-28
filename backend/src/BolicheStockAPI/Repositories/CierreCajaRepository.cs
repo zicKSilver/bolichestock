@@ -46,4 +46,11 @@ public class CierreCajaRepository : ICierreCajaRepository
         await _context.SaveChangesAsync();
         return cierre;
     }
+
+    public async Task<bool> DeleteAsync(CierreCaja cierre)
+    {
+        _context.CierresCaja.Remove(cierre);
+        await _context.SaveChangesAsync();
+        return true;
+    }
 }

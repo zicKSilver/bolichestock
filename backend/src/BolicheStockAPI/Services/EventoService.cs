@@ -120,6 +120,22 @@ public class EventoService : IEventoService
         return MapToDto(evento);
     }
 
+    public async Task<bool> DeleteCierreAsync(int eventoId)
+    {
+        var cierre = await _cierreRepository.GetByEventoIdAsync(eventoId);
+        if (cierre is null) return false;
+
+        var evento = await _eventoRepository.GetWithProductoEventoTicketsAsync(eventoId);
+        if (evento is not null)
+        {
+            evento.Estado = EventoEstado.Abierto;
+            await _eventoRepository.UpdateAsync(evento);
+        }
+
+        await _cierreRepository.DeleteAsync(cierre);
+        return true;
+    }
+
     public async Task<CierreCajaResponseDto?> GetCierreAsync(int eventoId)
     {
         var cierre = await _cierreRepository.GetByEventoIdAsync(eventoId);

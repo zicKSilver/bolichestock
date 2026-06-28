@@ -47,3 +47,14 @@ export function useCierresPaged(page: number, pageSize = 20) {
     queryFn: () => api.getCierresPaged(page, pageSize),
   })
 }
+
+export function useDeleteCierre() {
+  const qc = useQueryClient()
+  return useMutation({
+    mutationFn: (eventoId: number) => api.deleteCierre(eventoId),
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: queryKeys.eventos })
+      qc.invalidateQueries({ queryKey: ['cierres'] })
+    },
+  })
+}

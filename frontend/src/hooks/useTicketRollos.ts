@@ -1,6 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { api } from '../services/api'
 import { queryKeys } from '../config/queryKeys'
+import { toast } from 'sonner'
 
 export function useTicketRollos(eventoId: number | undefined) {
   return useQuery({
@@ -27,6 +28,9 @@ export function useCreateTicketRollo() {
       qc.invalidateQueries({ queryKey: queryKeys.ticketRollos.all(vars.eventoId) })
       qc.invalidateQueries({ queryKey: ['ticket-rollos', vars.eventoId, 'paged'] })
       qc.invalidateQueries({ queryKey: queryKeys.eventos })
+    },
+    onError: (error: Error) => {
+      toast.error(error.message)
     },
   })
 }

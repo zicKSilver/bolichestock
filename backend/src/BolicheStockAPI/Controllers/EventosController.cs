@@ -88,4 +88,14 @@ public class EventosController : ControllerBase
 
         return Ok(cierre);
     }
+
+    [HttpDelete("{id}/cierre")]
+    public async Task<ActionResult> DeleteCierre(int id)
+    {
+        var deleted = await _eventoService.DeleteCierreAsync(id);
+        if (!deleted)
+            return NotFound(new { message = $"No hay cierre para el evento con ID {id}" });
+
+        return NoContent();
+    }
 }

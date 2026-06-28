@@ -13,4 +13,5 @@ public interface IEventoService
     Task<EventoResponseDto?> DesactivarAsync(int id);
     Task<PagedResult<CierreListadoDto>> GetCierresPagedAsync(int page, int pageSize);
     Task<CierreCajaResponseDto?> GetCierreAsync(int eventoId);
+    Task<bool> DeleteCierreAsync(int eventoId);
 }

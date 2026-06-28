@@ -16,7 +16,7 @@ public class ProductoRepository : IProductoRepository
 
     public async Task<List<Producto>> GetAllAsync()
     {
-        return await _context.Productos.ToListAsync();
+        return await _context.Productos.OrderBy(p => p.Id).ToListAsync();
     }
 
     public async Task<PagedResult<Producto>> GetPagedAsync(int page, int pageSize, string? search = null)

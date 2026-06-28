@@ -123,6 +123,8 @@ export const api = {
 
   desactivarEvento: (id: number) =>
     request<Evento>(`/api/eventos/${id}/desactivar`, EventoSchema, { method: 'PUT' }),
+  deleteCierre: (eventoId: number) =>
+    request<void>(`/api/eventos/${eventoId}/cierre`, z.void(), { method: 'DELETE' }),
 
   getCierresPaged: (page: number, pageSize = 20) =>
     request<PagedResult<CierreListado>>(`/api/eventos/cierres?page=${page}&pageSize=${pageSize}`,
