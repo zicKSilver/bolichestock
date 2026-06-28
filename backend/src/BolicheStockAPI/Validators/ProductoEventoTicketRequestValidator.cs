@@ -8,10 +8,12 @@ public class ProductoEventoTicketRequestValidator : AbstractValidator<ProductoEv
     public ProductoEventoTicketRequestValidator()
     {
         RuleFor(x => x.ProductoId)
-            .GreaterThan(0).WithMessage("El producto es requerido");
+            .GreaterThan(0).WithMessage("El producto es requerido")
+            .When(x => x.ProductoId > 0);
 
         RuleFor(x => x.NumeroInicial)
-            .GreaterThanOrEqualTo(1).WithMessage("El número inicial debe ser mayor o igual a 1");
+            .GreaterThanOrEqualTo(1).WithMessage("El número inicial debe ser mayor o igual a 1")
+            .When(x => x.NumeroInicial > 0);
 
         RuleFor(x => x.TotalTicketera)
             .GreaterThanOrEqualTo(x => x.NumeroInicial)
