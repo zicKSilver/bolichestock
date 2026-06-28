@@ -33,7 +33,7 @@ beforeEach(() => {
 
 async function renderTicketeras() {
   const { default: TicketerasSection } = await import('../TicketerasSection')
-  return render(<TicketerasSection eventoActivo={eventoActivo} productos={productos} />)
+  return render(<TicketerasSection eventoActivo={eventoActivo} productos={productos} stocks={[]} />)
 }
 
 describe('TicketerasSection', () => {

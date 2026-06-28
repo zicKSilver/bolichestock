@@ -171,6 +171,7 @@ export default function Dashboard() {
           key={eventoActivo.id}
           eventoActivo={eventoActivo}
           productos={productos}
+          stocks={stocks}
         />
       )}
 

@@ -6,12 +6,13 @@ import Pagination from '../ui/Pagination'
 import Modal from '../ui/Modal'
 import Input from '../ui/Input'
 import { toast } from 'sonner'
-import type { ProductoEventoTicket, Evento } from '../../types/evento'
+import type { ProductoEventoTicket, Evento, StockItem } from '../../types/evento'
 import type { Producto } from '../../types/producto'
 
 interface Props {
   eventoActivo: Evento
   productos: Producto[]
+  stocks: StockItem[]
 }
 
 const coloresPorProducto = [
@@ -25,7 +26,14 @@ const coloresPorProducto = [
   'border-l-pink-400',
 ]
 
-export default function TicketerasSection({ eventoActivo, productos }: Props) {
+function StockBadge({ productoId, stocks }: { productoId: number; stocks: StockItem[] }) {
+  const item = stocks.find((s) => s.productoId === productoId)
+  if (!item) return null
+  if (item.sinStockNecesario) return <span className="text-xs text-gray-500">—</span>
+  return <span className="text-xs text-gray-300">Stock: {item.stock}</span>
+}
+
+export default function TicketerasSection({ eventoActivo, productos, stocks }: Props) {
   const [eliminandoRollo, setEliminandoRollo] = useState<ProductoEventoTicket | null>(null)
   const [editandoRollo, setEditandoRollo] = useState<{ rollo: ProductoEventoTicket; numeroInicial: string } | null>(null)
   const [errorEditar, setErrorEditar] = useState('')
@@ -53,7 +61,10 @@ export default function TicketerasSection({ eventoActivo, productos }: Props) {
               const colorClass = coloresPorProducto[idx % coloresPorProducto.length]
               return (
                 <div key={p.id} className={`rounded-lg border border-borde/30 border-l-4 p-3 ${colorClass}`}>
-                  <p className="mb-2 text-sm font-semibold text-white">{p.nombre}</p>
+                  <div className="mb-2 flex items-center gap-2 text-sm">
+                    <span className="font-semibold text-white">{p.nombre}</span>
+                    <StockBadge productoId={p.id} stocks={stocks} />
+                  </div>
                   <div className="space-y-1">
                     {rollosProducto.map((r) => (
                       <div key={r.id} className="flex items-center justify-between rounded-lg border border-borde/20 px-3 py-2 transition-all duration-200 hover:bg-white/2">
