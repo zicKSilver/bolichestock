@@ -2,7 +2,6 @@ import { z } from 'zod'
 import { LoginResponseSchema, type LoginResponse } from '../types/auth'
 import { ProductoSchema, type Producto, type ProductoRequest } from '../types/producto'
 import { EventoSchema, CierreCajaSchema, ProductoEventoTicketSchema, StockItemSchema, CierreListadoSchema, type Evento, type CierreCaja, type ProductoEventoTicket, type StockItem, type CierreListado } from '../types/evento'
-import { PromoSchema, type Promo, type PromoRequest } from '../types/promo'
 import { ReporteGeneralSchema, type ReporteGeneral } from '../types/reporte'
 import { PagedResultSchema } from '../types/common'
 import type { PagedResult } from '../types/common'
@@ -104,7 +103,7 @@ export const api = {
   getTicketRollosPaged: (eventoId: number, page: number, pageSize = 20) =>
     request<PagedResult<ProductoEventoTicket>>(`/api/eventos/${eventoId}/ticket-rollos?page=${page}&pageSize=${pageSize}`,
       PagedResultSchema(ProductoEventoTicketSchema)),
-  createTicketRollo: (eventoId: number, data: { productoId?: number; promoId?: number; numeroInicial: number; totalTicketera?: number }) =>
+  createTicketRollo: (eventoId: number, data: { productoId: number; numeroInicial: number; totalTicketera?: number }) =>
     request<ProductoEventoTicket>(`/api/eventos/${eventoId}/ticket-rollos`, ProductoEventoTicketSchema, {
       method: 'POST',
       body: JSON.stringify(data),
@@ -151,36 +150,4 @@ export const api = {
     request<void>(`/api/usuarios/${id}`, z.void(), {
       method: 'DELETE',
     }),
-
-  getPromos: () => request<Promo[]>('/api/promos', z.array(PromoSchema)),
-  getPromo: (id: number) => request<Promo>(`/api/promos/${id}`, PromoSchema),
-  createPromo: (data: PromoRequest) =>
-    request<Promo>('/api/promos', PromoSchema, {
-      method: 'POST',
-      body: JSON.stringify(data),
-    }),
-  updatePromo: (id: number, data: PromoRequest) =>
-    request<Promo>(`/api/promos/${id}`, PromoSchema, {
-      method: 'PUT',
-      body: JSON.stringify(data),
-    }),
-  deletePromo: (id: number) =>
-    request<void>(`/api/promos/${id}`, z.void(), {
-      method: 'DELETE',
-    }),
-
-  reponerStock: (eventoId: number, items: { productoId: number; cantidad: number }[]) =>
-    request<void>(`/api/eventos/${eventoId}/stocks/reponer`, z.void(), {
-      method: 'POST',
-      body: JSON.stringify({ items }),
-    }),
-  getReposiciones: (eventoId: number) =>
-    request<{ id: number; productoId: number; productoNombre: string; cantidad: number; fechaHora: string }[]>(
-      `/api/eventos/${eventoId}/stocks/reposiciones`, z.array(z.object({
-        id: z.number(),
-        productoId: z.number(),
-        productoNombre: z.string(),
-        cantidad: z.number(),
-        fechaHora: z.string(),
-      }))),
 }
