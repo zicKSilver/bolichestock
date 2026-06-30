@@ -8,10 +8,12 @@ import Input from '../ui/Input'
 import { toast } from 'sonner'
 import type { ProductoEventoTicket, Evento, StockItem } from '../../types/evento'
 import type { Producto } from '../../types/producto'
+import type { Promo } from '../../types/promo'
 
 interface Props {
   eventoActivo: Evento
   productos: Producto[]
+  promos: Promo[]
   stocks: StockItem[]
 }
 
@@ -44,6 +46,8 @@ export default function TicketerasSection({ eventoActivo, productos, stocks }: P
 
   const { data: rollosPaged } = useTicketRollosPaged(eventoActivo.id, pagina)
   const rollos = rollosPaged?.items ?? []
+  const rollosRegulares = rollos.filter((r) => !r.esPromo)
+  const rollosPromo = rollos.filter((r) => r.esPromo)
   const updateTicketRollo = useUpdateTicketRollo()
   const createTicketRollo = useCreateTicketRollo()
   const deleteTicketRollo = useDeleteTicketRollo()
@@ -56,7 +60,7 @@ export default function TicketerasSection({ eventoActivo, productos, stocks }: P
         ) : (
           <div className="space-y-3">
             {productos.map((p, idx) => {
-              const rollosProducto = rollos.filter((r) => r.productoId === p.id)
+              const rollosProducto = rollosRegulares.filter((r) => r.productoId === p.id)
               if (rollosProducto.length === 0) return null
               const colorClass = coloresPorProducto[idx % coloresPorProducto.length]
               return (
@@ -130,6 +134,88 @@ export default function TicketerasSection({ eventoActivo, productos, stocks }: P
                 </div>
               )
             })}
+            {promos.length > 0 && rollosPromo.length > 0 && (
+              <div className="mt-4 border-t border-borde/20 pt-4">
+                <p className="mb-3 text-sm font-semibold text-secondary">🎁 Promos</p>
+                <div className="space-y-3">
+                  {promos.map((promo, idx) => {
+                    const rollosDePromo = rollosPromo.filter((r) => r.promoId === promo.id)
+                    if (rollosDePromo.length === 0) return null
+                    const colorClass = coloresPorProducto[(productos.length + idx) % coloresPorProducto.length]
+                    return (
+                      <div key={promo.id} className={`rounded-lg border border-borde/30 border-l-4 p-3 ${colorClass}`}>
+                        <div className="mb-2 flex items-center gap-2 text-sm">
+                          <span className="font-semibold text-white">{promo.nombre}</span>
+                          <span className="text-xs text-gray-400">${promo.precio.toFixed(2)}</span>
+                        </div>
+                        <div className="space-y-1">
+                          {rollosDePromo.map((r) => (
+                            <div key={r.id} className="flex items-center justify-between rounded-lg border border-borde/20 px-3 py-2 transition-all duration-200 hover:bg-white/2">
+                              <div className="flex items-center gap-2 text-xs text-gray-200">
+                                <span>{r.numeroInicial} → {r.numeroFinal ?? r.totalTicketera}</span>
+                                {r.numeroFinal !== null ? (
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-green-500/15 px-2 py-0.5 text-xs font-semibold text-green-400">
+                                    ✓ Completada
+                                  </span>
+                                ) : (
+                                  <span className="inline-flex items-center gap-1 rounded-full bg-yellow-500/15 px-2 py-0.5 text-xs font-semibold text-yellow-400">
+                                    ● en uso
+                                  </span>
+                                )}
+                                <span className="text-gray-300">
+                                  ({r.ticketsCalculados} tickets · ${r.subtotal.toFixed(2)})
+                                </span>
+                              </div>
+                              <div className="flex gap-1">
+                                {r.numeroFinal === null && (
+                                  <>
+                                    <button
+                                      onClick={() => setNuevoRollo({ rollo: r, ultimoNumero: '' })}
+                                      className="rounded-lg px-2 py-1 text-xs font-semibold text-green-400 transition-all duration-200 hover:bg-green-400/10"
+                                    >
+                                      + Nueva
+                                    </button>
+                                    <button
+                                      onClick={() => setEditandoRollo({ rollo: r, numeroInicial: String(r.numeroInicial) })}
+                                      className="rounded-lg px-2 py-1 text-xs font-semibold text-primary transition-all duration-200 hover:bg-primary/10"
+                                    >
+                                      Editar
+                                    </button>
+                                    {rollosDePromo.some(r2 => r2.id !== r.id && r2.numeroFinal !== null) ? (
+                                      <button
+                                        onClick={() => setDeshaciendoRollo(r)}
+                                        className="rounded-lg px-2 py-1 text-xs font-semibold text-orange-400 transition-all duration-200 hover:bg-orange-400/10"
+                                      >
+                                        Deshacer
+                                      </button>
+                                    ) : (
+                                      <button
+                                        onClick={() => setEliminandoRollo(r)}
+                                        className="rounded-lg px-2 py-1 text-xs font-semibold text-red-400 transition-all duration-200 hover:bg-red-400/10"
+                                      >
+                                        Eliminar
+                                      </button>
+                                    )}
+                                  </>
+                                )}
+                                {r.numeroFinal !== null && (
+                                  <button
+                                    onClick={() => setEliminandoRollo(r)}
+                                    className="rounded-lg px-2 py-1 text-xs font-semibold text-red-400 transition-all duration-200 hover:bg-red-400/10"
+                                  >
+                                    Eliminar
+                                  </button>
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )
+                  })}
+                </div>
+              </div>
+            )}
           </div>
         )}
         {rollosPaged && (
@@ -239,12 +325,12 @@ export default function TicketerasSection({ eventoActivo, productos, stocks }: P
                 numeroFinal: ultimo,
                 completada: true,
               })
+              const crearData = nuevoRollo.rollo.esPromo
+                ? { promoId: nuevoRollo.rollo.promoId!, numeroInicial: 1 }
+                : { productoId: nuevoRollo.rollo.productoId!, numeroInicial: 1 }
               await createTicketRollo.mutateAsync({
                 eventoId: eventoActivo.id,
-                data: {
-                  productoId: nuevoRollo.rollo.productoId,
-                  numeroInicial: 1,
-                },
+                data: crearData,
               })
               toast.success('Ticketera completada y nueva creada')
               setNuevoRollo(null)
@@ -297,7 +383,14 @@ export default function TicketerasSection({ eventoActivo, productos, stocks }: P
             variant="danger"
             onClick={async () => {
               if (!deshaciendoRollo) return
-              const completada = rollos.find((r) => r.productoId === deshaciendoRollo.productoId && r.id !== deshaciendoRollo.id && r.numeroFinal !== null)
+              const completada = rollos.find((r) =>
+                r.id !== deshaciendoRollo.id
+                && r.numeroFinal !== null
+                && (
+                  (deshaciendoRollo.productoId != null && r.productoId === deshaciendoRollo.productoId)
+                  || (deshaciendoRollo.promoId != null && r.promoId === deshaciendoRollo.promoId)
+                )
+              )
               try {
                 await deleteTicketRollo.mutateAsync({ eventoId: eventoActivo.id, id: deshaciendoRollo.id })
                 if (completada) {

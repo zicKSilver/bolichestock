@@ -4,7 +4,10 @@ import { useEventos, useAbrirEvento, useDesactivarEvento } from '../hooks/useEve
 import { useReporte } from '../hooks/useReporte'
 import { useProductos } from '../hooks/useProductos'
 import { useTicketRollos, useCreateTicketRollo } from '../hooks/useTicketRollos'
+import { usePromos } from '../hooks/usePromos'
 import { useStock, useUpdateStock } from '../hooks/useStock'
+import { useMutation, useQueryClient } from '@tanstack/react-query'
+import { api } from '../services/api'
 import Card from '../components/ui/Card'
 import Button from '../components/ui/Button'
 import Modal from '../components/ui/Modal'
@@ -20,6 +23,7 @@ export default function Dashboard() {
   const hoy = new Date().toISOString().split('T')[0]
   const { data: reporteHoy } = useReporte(hoy, hoy)
   const { data: productos = [] } = useProductos()
+  const { data: promos = [] } = usePromos()
   const abrirEvento = useAbrirEvento()
 
   const eventoActivo = eventos.find((e) => e.estado === 'Abierto')
@@ -32,11 +36,24 @@ export default function Dashboard() {
   const [stockOverrides, setStockOverrides] = useState<Record<number, string>>({})
   const [sinStockNecesarioOverrides, setSinStockNecesarioOverrides] = useState<Record<number, boolean>>({})
   const [gestionarOpen, setGestionarOpen] = useState(false)
-  const [crearTicketera, setCrearTicketera] = useState<{ productoId: number; productoNombre: string } | null>(null)
+  const [crearTicketera, setCrearTicketera] = useState<{ type: 'producto' | 'promo'; id: number; nombre: string } | null>(null)
   const [numeroInicialCrear, setNumeroInicialCrear] = useState('')
 
   const { data: rollos = [] } = useTicketRollos(eventoActivo?.id)
   const createTicketRollo = useCreateTicketRollo()
+
+  const queryClient = useQueryClient()
+  const reponerMutation = useMutation({
+    mutationFn: (items: { productoId: number; cantidad: number }[]) =>
+      api.reponerStock(eventoActivo!.id, items),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['stock', eventoActivo?.id] })
+      toast.success('Stock repuesto')
+    },
+    onError: (error: Error) => toast.error(error.message),
+  })
+  const [reponerProductoId, setReponerProductoId] = useState(0)
+  const [reponerCantidad, setReponerCantidad] = useState('')
 
   function getStockValue(productoId: number): string {
     if (stockOverrides[productoId] !== undefined) return stockOverrides[productoId]
@@ -71,7 +88,9 @@ export default function Dashboard() {
   }
 
   const productoIdsConTicketera = new Set(rollos.map((r) => r.productoId))
+  const promoIdsConTicketera = new Set(rollos.filter((r) => r.promoId != null).map((r) => r.promoId!))
   const productosSinTicketera = productos.filter((p) => !productoIdsConTicketera.has(p.id))
+  const promosSinTicketera = promos.filter((p) => !promoIdsConTicketera.has(p.id))
   const productosAgotados = productos.filter(
     (p) => productoIdsConTicketera.has(p.id) && stocks.some((s) => s.productoId === p.id && s.stock === 0)
   )
@@ -171,6 +190,7 @@ export default function Dashboard() {
           key={eventoActivo.id}
           eventoActivo={eventoActivo}
           productos={productos}
+          promos={promos}
           stocks={stocks}
         />
       )}
@@ -206,7 +226,7 @@ export default function Dashboard() {
                             className="w-20 rounded border border-borde/50 bg-fondo px-2 py-1 text-sm text-white outline-none transition-all duration-200 focus:border-primary focus:shadow-[0_0_0_2px_rgba(232,121,249,0.25)]"
                           />
                           <button
-                            onClick={() => setCrearTicketera({ productoId: p.id, productoNombre: p.nombre })}
+                            onClick={() => setCrearTicketera({ type: 'producto', id: p.id, nombre: p.nombre })}
                             disabled={!getStockValue(p.id) || Number(getStockValue(p.id)) === 0}
                             title={!getStockValue(p.id) || Number(getStockValue(p.id)) === 0 ? 'Definí stock primero' : undefined}
                             className={`ml-auto rounded-lg px-2 py-1 text-xs font-semibold transition-all duration-200 ${
@@ -222,6 +242,25 @@ export default function Dashboard() {
                     </div>
                   )
                 })}
+              </div>
+            </div>
+          )}
+          {promosSinTicketera.length > 0 && (
+            <div className="mb-4">
+              <p className="mb-2 text-sm font-semibold text-gray-300">Promos sin ticketera</p>
+              <div className="space-y-2">
+                {promosSinTicketera.map((promo) => (
+                  <div key={promo.id} className="flex flex-wrap items-center gap-2 rounded-lg border border-borde/50 px-3 py-2 transition-all duration-200 hover:border-secondary/30">
+                    <span className="min-w-25 text-sm text-white">{promo.nombre}</span>
+                    <span className="text-xs text-gray-400">${promo.precio.toFixed(2)}</span>
+                    <button
+                      onClick={() => setCrearTicketera({ type: 'promo', id: promo.id, nombre: promo.nombre })}
+                      className="ml-auto rounded-lg px-2 py-1 text-xs font-semibold text-secondary transition-all duration-200 hover:bg-secondary/10 hover:shadow-[0_0_8px_rgba(192,132,252,0.15)]"
+                    >
+                      + Crear ticketera
+                    </button>
+                  </div>
+                ))}
               </div>
             </div>
           )}
@@ -251,11 +290,55 @@ export default function Dashboard() {
         </Card>
       )}
 
+      {/* Reponer stock */}
+      {eventoActivo && (
+        <Card title="📦 Reponer stock">
+          <div className="flex flex-wrap items-end gap-2">
+            <div className="flex-1">
+              <label className="mb-1 block text-xs text-secondary">Producto</label>
+              <select
+                value={reponerProductoId}
+                onChange={(e) => setReponerProductoId(Number(e.target.value))}
+                className="input w-full"
+              >
+                <option value={0}>Seleccionar</option>
+                {productos.map((p) => (
+                  <option key={p.id} value={p.id}>{p.nombre}</option>
+                ))}
+              </select>
+            </div>
+            <div className="w-24">
+              <label className="mb-1 block text-xs text-secondary">Cantidad</label>
+              <input
+                type="number"
+                min={1}
+                value={reponerCantidad}
+                onChange={(e) => setReponerCantidad(e.target.value)}
+                className="input w-full"
+              />
+            </div>
+            <Button
+              onClick={() => {
+                if (reponerProductoId === 0) { toast.error('Seleccioná un producto'); return }
+                const cant = Number(reponerCantidad)
+                if (cant < 1) { toast.error('La cantidad debe ser mayor a 0'); return }
+                reponerMutation.mutate([{ productoId: reponerProductoId, cantidad: cant }])
+                setReponerProductoId(0)
+                setReponerCantidad('')
+              }}
+              loading={reponerMutation.isPending}
+            >
+              Reponer
+            </Button>
+          </div>
+        </Card>
+      )}
+
       {/* Modal crear ticketera */}
       <Modal
         open={!!crearTicketera}
         onOpenChange={(o) => { if (!o) setCrearTicketera(null) }}
-        title={`Crear ticketera — ${crearTicketera?.productoNombre ?? ''}`}
+        title={`Crear ticketera — ${crearTicketera?.nombre ?? ''}`}
       >
         {crearTicketera && (
           <form onSubmit={async (e) => {
@@ -264,13 +347,15 @@ export default function Dashboard() {
             if (val < 1) { toast.error('El número debe ser mayor o igual a 1'); return }
             await createTicketRollo.mutateAsync({
               eventoId: eventoActivo!.id,
-              data: { productoId: crearTicketera.productoId, numeroInicial: val, totalTicketera: val },
+              data: crearTicketera.type === 'promo'
+                ? { promoId: crearTicketera.id, numeroInicial: val, totalTicketera: val }
+                : { productoId: crearTicketera.id, numeroInicial: val, totalTicketera: val },
             })
             setCrearTicketera(null)
             setNumeroInicialCrear('')
           }}>
             <p className="mb-4 text-sm text-gray-200">
-              Creando ticketera para <span className="text-white">{crearTicketera.productoNombre}</span>
+              Creando ticketera para <span className="text-white">{crearTicketera.nombre}</span>
             </p>
             <Input
               label="Número inicial"

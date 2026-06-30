@@ -22,7 +22,7 @@ export function useTicketRollosPaged(eventoId: number | undefined, page: number,
 export function useCreateTicketRollo() {
   const qc = useQueryClient()
   return useMutation({
-    mutationFn: ({ eventoId, data }: { eventoId: number; data: { productoId: number; numeroInicial: number; totalTicketera?: number } }) =>
+    mutationFn: ({ eventoId, data }: { eventoId: number; data: { productoId?: number; promoId?: number; numeroInicial: number; totalTicketera?: number } }) =>
       api.createTicketRollo(eventoId, data),
     onSuccess: (_, vars) => {
       qc.invalidateQueries({ queryKey: queryKeys.ticketRollos.all(vars.eventoId) })
